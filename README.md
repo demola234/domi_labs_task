@@ -1,9 +1,11 @@
-# Domi Labs Task 
+# Domi Labs Task
 
 ## Project Overview
+
 This Domi Labs Task is a high-fidelity replication of a complex UI design, showcasing expertise in crafting intricate layouts, reusable custom widgets, animations, and state management. The app was built to demonstrate proficiency in Flutter’s advanced UI capabilities and clean architecture principles.
 
 ## Features Implemented:
+
 - **Complex UI Design Replication:** The app faithfully reproduces the intricate UI design, showcasing the ability to recreate complex layouts and intricate designs.
 - **Custom Widgets:** The app incorporates custom widgets, demonstrating the ability to create reusable and modular components.
 - **Animations:** The app incorporates animations, showcasing the ability to create engaging and interactive user experiences.
@@ -20,35 +22,46 @@ This Domi Labs Task is a high-fidelity replication of a complex UI design, showc
 - **Performance Optimization:** The app includes performance optimization, demonstrating the ability to optimize code for performance.
 
 ## Setup Instructions
+
 ### Requirements:
+
 Flutter 3.0 or above
 Dart SDK
 
 ### How to Run:
- 1. Clone the repository: 
+
+1.  Clone the repository:
+
 ```bash
     git clone https://github.com/demola234/domi-labs-task.git
 ```
 
-2. Navigate to the project directory:   
+2. Navigate to the project directory:
+
 ```bash
     cd domi-id
- ```
+```
+
 3. Install dependencies:
+
 ```bash
     flutter pub get
 ```
 
 4. Run the app:
- ```bash
- flutter run
- ```
+
+```bash
+flutter run
+```
 
 ## Mock Data:
+
 The app uses mock data to simulate dynamic content. No API integration is required.
 
 ## Architecture Explanation
-The app follows a clean architecture, with the following layers 
+
+The app follows a clean architecture, with the following layers
+
 - **Data Layer:** Contains the data sources, repositories, and models.
 - **Domain Layer:** Contains the business logic, use cases, and entities.
 - **Presentation Layer:** Contains the UI and the presentation logic.
@@ -56,26 +69,31 @@ The app follows a clean architecture, with the following layers
 - **Infrastructure Layer:** Contains the implementation of the data sources, repositories, and models.
 
 ## Challenges and Solutions
-### Challenge 1: Complex Layout Implementation: 
+
+### Challenge 1: Complex Layout Implementation:
+
 The app features a complex UI design with multiple nested layouts and custom widgets.
 **Solution:** The app uses a combination of nested layouts and custom widgets to implement the complex layout. The app also uses a custom widget to implement the custom widget.
 
 ### Challenge 2: State Management:
+
 The app uses bloc for state management.
 **Solution:** The app uses bloc for state management. The app also uses a custom widget to implement the custom widget.
 
 ### Challenge 3: Custom Animations:
+
 The app uses custom animations to change height of container and scroll from widget to widget.
 **Solution:** The app uses a AnimatedContainer to implement the custom widget.
 
 ## Bonus Features
+
 - **Localization**: Basic localization setup for supporting multiple languages `Chinese`, `Spanish`, `French`, `Dutch`, `English`, and `Hindi`.
 - **Custom Painter**: Used `CustomPainter` for creating intricate graphic effects to match the design details.
 - **Google Maps**: Used for Creating Real life Simulations of the Map.
 
-
 ## Folder Structure
-``` bash 
+
+```bash
 ── app
 │   └── app.dart
 ├── bloc_observer.dart
@@ -151,10 +169,12 @@ The app uses custom animations to change height of container and scroll from wid
 ```
 
 ## Widget Tests:
+
 Wrote tests for two complex widgets to verify correct rendering and behavior.
 
 ## Screenshots and Recordings
 
+https://github.com/demola234/domi_labs_task/blob/main/screenshot/screenshot.mov
 
 ## Linting and Code Quality
 
@@ -162,5 +182,5 @@ Wrote tests for two complex widgets to verify correct rendering and behavior.
 - Ensured adherence to SOLID principles and followed best practices for clean architecture.
 
 ## Conclusion
-This project demonstrates the ability to handle complex Flutter UI designs, custom animations, and performance optimizations while ensuring a smooth user experience. Attention to detail was key, and the app was built with clean, scalable code that can be easily extended in the future.
 
+This project demonstrates the ability to handle complex Flutter UI designs, custom animations, and performance optimizations while ensuring a smooth user experience. Attention to detail was key, and the app was built with clean, scalable code that can be easily extended in the future.
