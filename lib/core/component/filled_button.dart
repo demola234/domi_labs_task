@@ -77,7 +77,9 @@ class FilledButtonComponent extends StatelessWidget {
             style: context.theme.fonts.subHeader.copyWith(
               fontSize: textSize,
               fontWeight: FontWeight.w600,
-              color: textColor ?? context.theme.colors.textWhite,
+              color: active == true
+                  ? textColor ?? context.theme.colors.textWhite
+                  : context.theme.colors.textPrimary,
               // fontFamily: PropertyConstant.fontLight,
             ),
           ),

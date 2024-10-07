@@ -18,7 +18,10 @@ class HeaderRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         IconButton(
-          icon: SvgPicture.asset(IconsComponents.arrowUp),
+          icon: SvgPicture.asset(
+            IconsComponents.arrowUp,
+            color: context.theme.colors.textPrimary,
+          ),
           onPressed: () {
             if (currentPage > 0) {
               pageController.previousPage(

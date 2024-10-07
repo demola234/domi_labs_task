@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:domi_id/core/design_system/theme_extension/app_theme_extension.dart';
+import 'package:domi_id/core/design_system/theme_extension/theme_detection.dart';
+import 'package:domi_id/core/localization/localization_detection.dart';
 import 'package:domi_id/core/utils/sized_box_extension.dart';
 import 'package:domi_id/feature/presentation/bloc/claim_address_bloc.dart';
 import 'package:domi_id/feature/presentation/bloc/claim_address_state.dart';
@@ -55,6 +58,23 @@ class _ClaimAddressScreenState extends State<ClaimAddressScreen> {
               },
             ),
             Positioned(
+                top: 50,
+                right: 40,
+                child: Container(
+                  height: 40.sp,
+                  width: 40.sp,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100),
+                    color: context.theme.colors.textWhite,
+                  ),
+                  child: IconButton(
+                    icon: const Icon(Icons.settings),
+                    onPressed: () {
+                      _showLanguageDropdown(context);
+                    },
+                  ),
+                )),
+            Positioned(
               bottom: 30.sp,
               left: 20.sp,
               right: 20.sp,
@@ -76,7 +96,7 @@ class _ClaimAddressScreenState extends State<ClaimAddressScreen> {
                           loaded: (location) => context.screenHeight(0.6),
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: context.theme.colors.textWhite,
                           borderRadius: BorderRadius.all(
                             Radius.circular(24.r),
                           ),
@@ -110,6 +130,98 @@ class _ClaimAddressScreenState extends State<ClaimAddressScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  void _showLanguageDropdown(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return BlocBuilder<ThemeCubit, ThemeModeEnum>(
+          builder: (context, themeState) {
+            return BlocBuilder<LocalizationCubit, Localization>(
+              builder: (context, state) {
+                return AlertDialog(
+                  title: Text(
+                    'Settings',
+                    style: context.theme.textTheme.titleLarge?.copyWith(
+                      color: context.theme.colors.textPrimary,
+                    ),
+                  ),
+                  backgroundColor: context.theme.colors.surface,
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      DropdownButton<ThemeModeEnum>(
+                        value: themeState,
+                        dropdownColor: context.theme.colors.surfaceCard,
+                        onChanged: (ThemeModeEnum? newValue) {
+                          if (newValue != null) {
+                            context.read<ThemeCubit>().setTheme(newValue);
+                          }
+                          Navigator.of(context).pop();
+                        },
+                        items: ThemeModeEnum.values
+                            .map<DropdownMenuItem<ThemeModeEnum>>(
+                                (ThemeModeEnum value) {
+                          return DropdownMenuItem<ThemeModeEnum>(
+                            value: value,
+                            child: Text(
+                              value.name,
+                              style: context.theme.fonts.bodyMedium.copyWith(
+                                color: context.theme.colors.textPrimary,
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                      DropdownButton<Localization>(
+                        value: state,
+                        dropdownColor: context.theme.colors.surfaceCard,
+                        onChanged: (Localization? newValue) {
+                          if (newValue != null) {
+                            context
+                                .read<LocalizationCubit>()
+                                .changeLocalization(newValue);
+                          }
+                          Navigator.of(context).pop();
+                        },
+                        items: Localization.values
+                            .map<DropdownMenuItem<Localization>>(
+                                (Localization value) {
+                          return DropdownMenuItem<Localization>(
+                            value: value,
+                            child: Text(
+                              value.name,
+                              style: context.theme.fonts.bodyMedium.copyWith(
+                                color: context.theme.colors.textPrimary,
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ],
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context)
+                            .pop(); // Close the dialog without changes
+                      },
+                      child: Text(
+                        'Cancel',
+                        style: context.theme.fonts.bodyMedium.copyWith(
+                          color: context.theme.colors.textHighlightBlue,
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+        );
+      },
     );
   }
 
