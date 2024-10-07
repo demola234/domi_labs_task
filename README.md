@@ -174,7 +174,9 @@ Wrote tests for two complex widgets to verify correct rendering and behavior.
 
 ## Screenshots and Recordings
 
-<video src="https://github.com/demola234/domi_labs_task/blob/main/screenshot/screenrecording.mp4"></video>
+https://github.com/user-attachments/assets/906fafd9-23b2-42d3-b83d-940a5858e834
+
+
 
 ## Linting and Code Quality
 
