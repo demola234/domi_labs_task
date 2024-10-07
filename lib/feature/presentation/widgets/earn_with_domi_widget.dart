@@ -20,6 +20,17 @@ class EarnWithDomiIDPage extends StatefulWidget {
 }
 
 class _EarnWithDomiIDPageState extends State<EarnWithDomiIDPage> {
+  String formatEstimatedValue(double value) {
+    if (value >= 1000000) {
+      return '${(value / 1000000).toStringAsFixed(1)}M';
+    } else if (value >= 1000) {
+      return '${(value / 1000).toStringAsFixed(1)}K';
+    } else {
+      return value.toStringAsFixed(
+          2); 
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -47,61 +58,81 @@ class _EarnWithDomiIDPageState extends State<EarnWithDomiIDPage> {
             ),
             SizedBox(height: 20.h),
             const SizedBox(height: 20.0),
-            const Row(
+            Row(
               children: [
                 Text(
-                  'Your Home Value :',
-                  style: TextStyle(
-                    color: Color(0xFF000003),
-                    fontSize: 12,
+                  context.l10n.yourHomeValue,
+                  style: context.theme.fonts.bodyMedium.copyWith(
+                    color: context.theme.colors.textTertiary,
+                    fontSize: 12.sp,
                     fontWeight: FontWeight.w400,
                   ),
                 ),
-                // Text(
-                //   '\$${formatEstimatedValue(_estimatedPrice != null ? _estimatedPrice! * _selectedPrice! : 0.0)}',
-                //   style: const TextStyle(
-                //     color: Color(0xFF000003),
-                //     fontSize: 12,
-                //     fontWeight: FontWeight.w600,
-                //   ),
-                // ),
+                SizedBox(width: 5.w),
+                BlocBuilder<ClaimAddressCubit, ClaimAddressState>(
+                  builder: (context, claimState) {
+                    return claimState.maybeWhen(
+                        orElse: () => const SizedBox.shrink(),
+                        selectedLocation: (selectedLocation, selectedPrice,
+                                estimatedPrice, markers) =>
+                            BlocBuilder<SliderCubit, double>(
+                              builder: (context, sliderValue) {
+                                return Text(
+                                  '\$${formatEstimatedValue(estimatedPrice != null ? estimatedPrice * sliderValue : 0.0)} (Est.)',
+                                  style:
+                                      context.theme.fonts.bodyMedium.copyWith(
+                                    color: context.theme.colors.textPrimary,
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                );
+                              },
+                            ));
+                  },
+                ),
               ],
             ),
             SizedBox(height: 5.h),
-            BlocBuilder<ClaimAddressCubit, ClaimAddressState>(
-              builder: (context, state) {
-                return Stack(
-                  children: [
-                    Row(
-                      children: [
-                        BlocProvider(
-                          create: (_) => SliderCubit(),
-                          child: BlocBuilder<SliderCubit, double>(
-                            builder: (context, sliderValue) {
-                              return GestureDetector(
-                                onPanUpdate: (details) {
-                                  double newValue = (details.localPosition.dx /
-                                          context.size!.width)
-                                      .clamp(0.0, 1.0);
-                                  context
-                                      .read<SliderCubit>()
-                                      .updateValue(newValue);
-                                },
-                                child: CustomPaint(
+            Stack(children: [
+              Row(
+                children: [
+                  BlocBuilder<ClaimAddressCubit, ClaimAddressState>(
+                    builder: (context, claimState) {
+                      return BlocBuilder<SliderCubit, double>(
+                        builder: (context, sliderValue) {
+                          return GestureDetector(
+                              onPanUpdate: (details) {
+                                double newValue = (details.localPosition.dx /
+                                        context.size!.width)
+                                    .clamp(0.0, 1.0);
+                                context
+                                    .read<SliderCubit>()
+                                    .updateValue(newValue);
+                              },
+                              child: CustomPaint(
                                   size: Size(context.screenWidth(0.8), 80),
-                                  painter: SliderPainter(sliderValue,
-                                      state.selectedPrice ?? 300.0),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                );
-              },
-            ),
+                                  painter: SliderPainter(
+                                      sliderValue,
+                                      claimState.maybeMap(
+                                        orElse: () => 0.0,
+                                        selectedLocation: (value) =>
+                                            value.maybeWhen(
+                                                orElse: () => 0.0,
+                                                selectedLocation:
+                                                    (selectedLocation,
+                                                            selectedPrice,
+                                                            estimatedPrice,
+                                                            markers) =>
+                                                        selectedPrice!
+                                                            .toDouble()),
+                                      ))));
+                        },
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ]),
             SizedBox(height: 8.h),
             Text(
               context.l10n.openingDirect,

@@ -1,39 +1,21 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
 import '../../data/models/location_model.dart';
 
-class ClaimAddressState {
-  final List<LocationModel> locations;
-  final String? selectedLocation;
-  final double? selectedPrice;
-  final int? estimatedPrice;
-  final bool loading;
-  final List<Marker> markers;
+part 'claim_address_state.freezed.dart';
 
-  ClaimAddressState({
-    this.locations = const [],
-    this.selectedLocation,
-    this.selectedPrice,
-    this.estimatedPrice,
-    this.loading = false,
-    this.markers = const [],
-  });
-
-  ClaimAddressState copyWith({
-    List<LocationModel>? locations,
+@freezed
+class ClaimAddressState with _$ClaimAddressState {
+  const factory ClaimAddressState.initial() = _Initial;
+  const factory ClaimAddressState.loading() = _Loading;
+  const factory ClaimAddressState.loaded({
+    required List<LocationModel> locations,
+  }) = _Loaded;
+  const factory ClaimAddressState.selectedLocation({
     String? selectedLocation,
     double? selectedPrice,
     int? estimatedPrice,
-    bool? loading,
-    List<Marker>? markers, // Add marker to copyWith
-  }) {
-    return ClaimAddressState(
-      locations: locations ?? this.locations,
-      selectedLocation: selectedLocation ?? this.selectedLocation,
-      selectedPrice: selectedPrice ?? this.selectedPrice,
-      estimatedPrice: estimatedPrice ?? this.estimatedPrice,
-      loading: loading ?? this.loading,
-      markers: markers ?? this.markers, // Update markers if provided
-    );
-  }
+    required List<Marker> markers,
+  }) = _SelectedLocation;
+  const factory ClaimAddressState.error(String message) = _Error;
 }

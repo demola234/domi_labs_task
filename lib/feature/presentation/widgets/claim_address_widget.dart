@@ -1,6 +1,7 @@
 import 'package:domi_id/core/component/filled_button.dart';
 import 'package:domi_id/core/design_system/theme_extension/app_theme_extension.dart';
 import 'package:domi_id/core/localization/localization_detection.dart';
+import 'package:domi_id/core/utils/heptic_manager/heptic_manager.dart';
 import 'package:domi_id/feature/presentation/bloc/claim_address_bloc.dart';
 import 'package:domi_id/feature/presentation/bloc/claim_address_state.dart';
 import 'package:domi_id/feature/presentation/widgets/address_text_field_widget.dart';
@@ -28,6 +29,9 @@ class ClaimAddressPage extends StatefulWidget {
 class _ClaimAddressPageState extends State<ClaimAddressPage> {
   final TextEditingController _addressController = TextEditingController();
   final ValueNotifier<String> _address = ValueNotifier<String>('');
+  final ValueNotifier<bool> _showSuggestions = ValueNotifier<bool>(false);
+  final ValueNotifier<bool> _buttonVisible = ValueNotifier<bool>(false);
+  final ValueNotifier<double> _containerHeight = ValueNotifier<double>(250);
 
   @override
   void dispose() {
@@ -62,40 +66,72 @@ class _ClaimAddressPageState extends State<ClaimAddressPage> {
               ),
             ),
             SizedBox(height: 24.h),
+            
             AddressTextField(
               controller: _addressController,
               onChanged: (value) {
-                context.read<ClaimAddressCubit>().loadLocations(context);
+                context.read<ClaimAddressCubit>().loadLocations();
                 _address.value = value;
+                
+                _showSuggestions.value = value.isNotEmpty;
+                _buttonVisible.value = false;
+                
+                _containerHeight.value = value.isNotEmpty ? 400.h : 250.h;
               },
             ),
-            LocationSuggestions(
-              addressNotifier: _address,
-              onLocationSelected: widget.onLocationSelected,
-            ),
-            _address.value.isNotEmpty
-                ? const SizedBox.shrink()
-                : SizedBox(height: 32.h),
-            ValueListenableBuilder(
-              valueListenable: _address,
-              builder: (context, value, child) {
-                return BlocBuilder<ClaimAddressCubit, ClaimAddressState>(
-                    builder: (context, state) {
-                  if (value.isNotEmpty) return const SizedBox.shrink();
-                  return FilledButtonComponent(
-                    active: true,
-                    onTap: () {
-                      FocusManager.instance.primaryFocus?.unfocus();
-                      widget.pageController.nextPage(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeInOut,
-                      );
-                    },
-                    text: context.l10n.claimAddress,
-                  );
-                });
+            ValueListenableBuilder<bool>(
+              valueListenable: _showSuggestions,
+              builder: (context, showSuggestions, child) {
+                return showSuggestions
+                    ? LocationSuggestions(
+                        addressNotifier: _address,
+                        onLocationSelected:
+                            (location, price, estimatedValue, coordinates) {
+                          HapticManager.lightImpact();
+                          
+                          _showSuggestions.value = false;
+                          _buttonVisible.value = true;
+                          
+                          _addressController.text = location;
+                          _address.value = location;
+                          
+                          _containerHeight.value = 250.h;
+                          
+                          widget.onLocationSelected(
+                              location, price, estimatedValue, coordinates);
+                        },
+                      )
+                    : const SizedBox.shrink();
               },
-            )
+            ),
+            SizedBox(height: 32.h),
+            
+            BlocBuilder<ClaimAddressCubit, ClaimAddressState>(
+              builder: (context, state) {
+                return state.maybeWhen(
+                    loaded: (
+                      selectedLocation,
+                    ) =>
+                        const SizedBox.shrink(),
+                    orElse: () => FilledButtonComponent(
+                          active: state.maybeWhen(
+                            orElse: () => false,
+                            selectedLocation: (selectedLocation, selectedPrice,
+                                    estimatedPrice, markers) =>
+                                true,
+                          ),
+                          onTap: () {
+                            FocusManager.instance.primaryFocus?.unfocus();
+                            HapticManager.selectionClick();
+                            widget.pageController.nextPage(
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeInOut,
+                            );
+                          },
+                          text: context.l10n.claimAddress,
+                        ));
+              },
+            ),
           ],
         ),
       ),

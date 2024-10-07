@@ -40,22 +40,30 @@ class LocationTile extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                name,
-                style: context.theme.fonts.bodyMedium.copyWith(
-                  color: context.theme.colors.textPrimary,
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w600,
+              SizedBox(
+                width: context.screenWidth(0.5),
+                child: Text(
+                  name,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.theme.fonts.bodyMedium.copyWith(
+                    color: context.theme.colors.textPrimary,
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
-              Text(
-                address,
-                style: context.theme.fonts.bodyMedium.copyWith(
-                  color: context.theme.colors.textPrimary,
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w400,
+              SizedBox(
+                width: context.screenWidth(0.6),
+                child: Text(
+                  address,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.theme.fonts.bodyMedium.copyWith(
+                    color: context.theme.colors.textPrimary,
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
-              ),
+              )
             ],
           ),
         ],

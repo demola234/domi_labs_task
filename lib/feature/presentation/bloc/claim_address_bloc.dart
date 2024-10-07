@@ -12,51 +12,58 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class ClaimAddressCubit extends Cubit<ClaimAddressState> {
   final GetLocationsUseCase getLocationsUseCase;
 
-  ClaimAddressCubit(this.getLocationsUseCase) : super(ClaimAddressState());
+  ClaimAddressCubit(this.getLocationsUseCase)
+      : super(const ClaimAddressState.initial());
 
-  // Load locations from the use case without creating markers initially
-  Future<void> loadLocations(BuildContext context) async {
-    emit(state.copyWith(loading: true));
+  Future<void> loadLocations() async {
+    emit(const ClaimAddressState.loading());
 
-    // Fetch the locations using the use case
-    final locations = await getLocationsUseCase();
+    try {
+      final locations = await getLocationsUseCase();
 
-    // Emit the state with loaded locations, no markers yet
-    emit(state.copyWith(locations: locations, loading: false));
+      emit(ClaimAddressState.loaded(
+        locations: locations,
+      ));
+    } catch (e) {
+      emit(ClaimAddressState.error(e.toString()));
+    }
   }
 
-  // Select a location and display a single marker
-  Future<void> selectLocation(BuildContext context, String location, double price, int estimatedValue, LatLng coordinates) async {
-    emit(state.copyWith(
-      selectedLocation: location,
-      selectedPrice: price,
-      estimatedPrice: estimatedValue,
-      loading: true, // Show loading while marker is being created
-    ));
-
-    // Clear any previous markers
-    List<Marker> markers = [];
-
-    // Convert the selected location into a marker
-    final markerWidget = CustomMarkerWidget(address: location, price: price);
-    final markerIcon = await _widgetToBitmap(markerWidget, const Size(180, 200), context);
-
-    Marker marker = Marker(
-      markerId: MarkerId(location),
-      position: coordinates,
-      icon: BitmapDescriptor.fromBytes(markerIcon),
-    );
-
-    markers.add(marker);
-
-    // Emit the state with the single marker
-    emit(state.copyWith(
-      markers: markers,
-      loading: false, // Stop loading after marker is created
-    ));
+  void clearSelectedLocation() {
+    emit(const ClaimAddressState.initial());
   }
 
-  // Helper method to convert a widget to a bitmap image for the marker icon
+  Future<void> selectLocation(BuildContext context, String selectedLocation,
+      double price, int estimatedValue, LatLng coordinates) async {
+    emit(const ClaimAddressState.loading());
+
+    try {
+      List<Marker> markers = [];
+
+      final markerWidget =
+          CustomMarkerWidget(address: selectedLocation, price: price);
+      final markerIcon =
+          await _widgetToBitmap(markerWidget, const Size(200, 200), context);
+
+      Marker marker = Marker(
+        markerId: MarkerId(selectedLocation),
+        position: coordinates,
+        icon: BitmapDescriptor.fromBytes(markerIcon),
+      );
+
+      markers.add(marker);
+
+      emit(ClaimAddressState.selectedLocation(
+        selectedLocation: selectedLocation,
+        selectedPrice: price,
+        estimatedPrice: estimatedValue,
+        markers: markers,
+      ));
+    } catch (e) {
+      emit(ClaimAddressState.error(e.toString()));
+    }
+  }
+
   Future<Uint8List> _widgetToBitmap(
       Widget widget, Size size, BuildContext context) async {
     final GlobalKey repaintKey = GlobalKey();

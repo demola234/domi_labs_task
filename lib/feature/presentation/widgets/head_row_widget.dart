@@ -1,6 +1,8 @@
 import 'package:domi_id/core/component/icon_components.dart';
 import 'package:domi_id/core/design_system/theme_extension/app_theme_extension.dart';
+import 'package:domi_id/feature/presentation/bloc/claim_address_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 class HeaderRow extends StatelessWidget {
@@ -24,6 +26,7 @@ class HeaderRow extends StatelessWidget {
                 curve: Curves.easeInOut,
               );
             }
+            context.read<ClaimAddressCubit>().clearSelectedLocation();
           },
         ),
         Text(
