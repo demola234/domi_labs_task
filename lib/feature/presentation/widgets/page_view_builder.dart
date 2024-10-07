@@ -1,4 +1,3 @@
-
 import 'package:domi_id/core/utils/sized_box_extension.dart';
 import 'package:domi_id/feature/presentation/widgets/claim_address_widget.dart';
 import 'package:domi_id/feature/presentation/widgets/earn_with_domi_widget.dart';
@@ -27,7 +26,7 @@ class PageViewWidget extends StatelessWidget {
       onPageChanged: (int page) {
         currentPage.value = page;
         pageHeight.value =
-            page == 0 ? context.screenHeight(0.4) : context.screenHeight(0.48);
+            page == 0 ? context.screenHeight(0.44) : context.screenHeight(0.48);
       },
       children: [
         ClaimAddressPage(

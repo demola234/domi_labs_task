@@ -66,16 +66,16 @@ class _ClaimAddressPageState extends State<ClaimAddressPage> {
               ),
             ),
             SizedBox(height: 24.h),
-            
+            // Address Text Field
             AddressTextField(
               controller: _addressController,
               onChanged: (value) {
                 context.read<ClaimAddressCubit>().loadLocations();
                 _address.value = value;
-                
+                // Show suggestions and hide button when typing starts
                 _showSuggestions.value = value.isNotEmpty;
                 _buttonVisible.value = false;
-                
+                // Adjust the container size when typing
                 _containerHeight.value = value.isNotEmpty ? 400.h : 250.h;
               },
             ),
@@ -88,15 +88,15 @@ class _ClaimAddressPageState extends State<ClaimAddressPage> {
                         onLocationSelected:
                             (location, price, estimatedValue, coordinates) {
                           HapticManager.lightImpact();
-                          
+                          // When a location is selected, hide suggestions
                           _showSuggestions.value = false;
                           _buttonVisible.value = true;
-                          
+                          // Update the address field with the selected location
                           _addressController.text = location;
                           _address.value = location;
-                          
+                          // Reduce container height
                           _containerHeight.value = 250.h;
-                          
+                          // Call the callback for selected location
                           widget.onLocationSelected(
                               location, price, estimatedValue, coordinates);
                         },
@@ -105,7 +105,7 @@ class _ClaimAddressPageState extends State<ClaimAddressPage> {
               },
             ),
             SizedBox(height: 32.h),
-            
+            // Button will appear only after location is selected
             BlocBuilder<ClaimAddressCubit, ClaimAddressState>(
               builder: (context, state) {
                 return state.maybeWhen(

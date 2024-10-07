@@ -21,7 +21,7 @@ class ClaimAddressScreen extends StatefulWidget {
 class _ClaimAddressScreenState extends State<ClaimAddressScreen> {
   final Completer<GoogleMapController> _mapController = Completer();
   final ValueNotifier<int> _currentPage = ValueNotifier<int>(0);
-  final ValueNotifier<double> _pageHeight = ValueNotifier<double>(400);
+
   late PageController _pageController;
   CameraPosition? _currentCameraPosition;
 
@@ -33,77 +33,75 @@ class _ClaimAddressScreenState extends State<ClaimAddressScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      designSize: const Size(375, 812),
-      minTextAdapt: true,
-      builder: (c, d) => Scaffold(
-        body: SafeArea(
-          top: false,
-          bottom: false,
-          child: Stack(
-            children: [
-              BlocBuilder<ClaimAddressCubit, ClaimAddressState>(
-                builder: (context, state) {
-                  return GoogleMapWidget(
-                    mapController: _mapController,
-                    markers: state.maybeWhen(
-                      orElse: () => [],
-                      selectedLocation: (selectedLocation, selectedPrice,
-                              estimatedPrice, markers) =>
-                          markers,
-                    ),
-                  );
-                },
-              ),
-              Positioned(
-                bottom: 30.sp,
-                left: 20.sp,
-                right: 20.sp,
-                child: ValueListenableBuilder<double>(
-                  valueListenable: _pageHeight,
-                  builder: (context, height, child) =>
-                      BlocBuilder<ClaimAddressCubit, ClaimAddressState>(
-                    builder: (context, state) {
-                      return AnimatedContainer(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeInOut,
-                        height: state.maybeWhen(
-                          orElse: () => height,
-                          loaded: (location) => context.screenHeight(0.6),
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(24.r),
-                          ),
-                        ),
-                        child: child,
-                      );
-                    },
+    final ValueNotifier<double> pageHeight =
+        ValueNotifier<double>(context.screenHeight(0.45));
+    return Scaffold(
+      body: SafeArea(
+        top: false,
+        bottom: false,
+        child: Stack(
+          children: [
+            BlocBuilder<ClaimAddressCubit, ClaimAddressState>(
+              builder: (context, state) {
+                return GoogleMapWidget(
+                  mapController: _mapController,
+                  markers: state.maybeWhen(
+                    orElse: () => [],
+                    selectedLocation: (selectedLocation, selectedPrice,
+                            estimatedPrice, markers) =>
+                        markers,
                   ),
-                  child: BlocBuilder<ClaimAddressCubit, ClaimAddressState>(
-                    builder: (context, state) {
-                      return PageViewWidget(
-                        currentPage: _currentPage,
-                        pageHeight: _pageHeight,
-                        pageController: _pageController,
-                        onClaimLocationSelected:
-                            (location, price, estimatedValue, coordinates) {
-                          context.read<ClaimAddressCubit>().selectLocation(
-                              context,
-                              location,
-                              price,
-                              estimatedValue,
-                              coordinates);
-                          _goToLocation(coordinates);
-                        },
-                      );
-                    },
-                  ),
+                );
+              },
+            ),
+            Positioned(
+              bottom: 30.sp,
+              left: 20.sp,
+              right: 20.sp,
+              child: ValueListenableBuilder<double>(
+                valueListenable: pageHeight,
+                builder: (context, height, child) =>
+                    BlocBuilder<ClaimAddressCubit, ClaimAddressState>(
+                  builder: (context, state) {
+                    return AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                      height: state.maybeWhen(
+                        orElse: () => height,
+                        loaded: (location) => context.screenHeight(0.6),
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(24.r),
+                        ),
+                      ),
+                      child: child,
+                    );
+                  },
+                ),
+                child: BlocBuilder<ClaimAddressCubit, ClaimAddressState>(
+                  builder: (context, state) {
+                    return PageViewWidget(
+                      currentPage: _currentPage,
+                      pageHeight: pageHeight,
+                      pageController: _pageController,
+                      onClaimLocationSelected:
+                          (location, price, estimatedValue, coordinates) {
+                        context.read<ClaimAddressCubit>().selectLocation(
+                            context,
+                            location,
+                            price,
+                            estimatedValue,
+                            coordinates);
+                        _goToLocation(coordinates);
+                      },
+                    );
+                  },
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

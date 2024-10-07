@@ -68,7 +68,7 @@ class RPSCustomPainter extends CustomPainter {
   void paint(Canvas canvas, Size size, [Offset offset = Offset.zero]) {
     // Drawing the thumb with custom style
     Paint paint0Fill = Paint()..style = PaintingStyle.fill;
-    paint0Fill.color = const Color(0xffF6F6F7).withOpacity(1.0);
+    paint0Fill.color = AppColor.surfaceCard.withOpacity(1.0);
     canvas.drawRRect(
         RRect.fromRectAndCorners(
           Rect.fromLTWH(
@@ -102,7 +102,7 @@ class RPSCustomPainter extends CustomPainter {
         paint1Stroke);
 
     Paint paint1Fill = Paint()..style = PaintingStyle.fill;
-    paint1Fill.color = const Color(0xffffffff).withOpacity(1.0);
+    paint1Fill.color = AppColor.textWhite.withOpacity(1.0);
     canvas.drawRRect(
         RRect.fromRectAndCorners(
           Rect.fromLTWH(

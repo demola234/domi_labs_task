@@ -32,7 +32,7 @@ class AddressTextField extends StatelessWidget {
         ),
       ),
       prefixIcon: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: EdgeInsets.all(8.sp),
         child: SvgPicture.asset(
           IconsComponents.location,
           height: 24.h,

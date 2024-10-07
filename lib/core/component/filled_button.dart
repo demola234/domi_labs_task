@@ -44,7 +44,7 @@ class FilledButtonComponent extends StatelessWidget {
             ? color ?? context.theme.colors.activeButton
             : context.theme.colors.inactiveButton,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.sp),
+          borderRadius: BorderRadius.circular(8.r),
           side: BorderSide(
             color: active!
                 ? borderColor ?? context.theme.colors.surface
@@ -53,8 +53,8 @@ class FilledButtonComponent extends StatelessWidget {
         ),
         elevation: 0,
         padding: padding ??
-            EdgeInsets.symmetric(
-              vertical: 15.sp,
+            const EdgeInsets.symmetric(
+              vertical: 15,
             ),
         animationDuration: const Duration(milliseconds: 500),
         fixedSize: fixedSize ?? Size(context.screenWidth() - 20, 56.sp),
