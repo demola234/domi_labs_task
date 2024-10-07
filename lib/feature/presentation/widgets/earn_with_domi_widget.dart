@@ -26,8 +26,7 @@ class _EarnWithDomiIDPageState extends State<EarnWithDomiIDPage> {
     } else if (value >= 1000) {
       return '${(value / 1000).toStringAsFixed(1)}K';
     } else {
-      return value.toStringAsFixed(
-          2); 
+      return value.toStringAsFixed(2);
     }
   }
 
@@ -57,7 +56,6 @@ class _EarnWithDomiIDPageState extends State<EarnWithDomiIDPage> {
               ),
             ),
             SizedBox(height: 20.h),
-            const SizedBox(height: 20.0),
             Row(
               children: [
                 Text(
