@@ -33,31 +33,43 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned.fill(
-      child: BlocBuilder<ThemeCubit, ThemeModeEnum>(
-        builder: (context, state) {
-          _applyMapStyle(state);
+    return Stack(
+      children: [
+        BlocBuilder<ThemeCubit, ThemeModeEnum>(
+          builder: (context, state) {
+            _applyMapStyle(state);
 
-          return GoogleMap(
-            initialCameraPosition: const CameraPosition(
-              target: LatLng(27.9506, -82.4572),
-              zoom: 14.0,
-            ),
-            mapType: MapType.normal,
-            myLocationEnabled: false,
-            mapToolbarEnabled: false,
-            myLocationButtonEnabled: false,
-            onMapCreated: (GoogleMapController controller) {
-              widget.mapController.complete(controller);
-              _controller = controller;
+            return GoogleMap(
+              initialCameraPosition: const CameraPosition(
+                target: LatLng(27.9506, -82.4572),
+                zoom: 14.0,
+              ),
+              mapType: MapType.normal,
+              myLocationEnabled: false,
+              mapToolbarEnabled: false,
+              myLocationButtonEnabled: false,
+              onMapCreated: (GoogleMapController controller) {
+                widget.mapController.complete(controller);
+                _controller = controller;
 
-              // Set initial map style based on the theme
-              _applyMapStyle(state);
-            },
-            markers: Set<Marker>.of(widget.markers),
-          );
-        },
-      ),
+                // Set initial map style based on the theme
+                _applyMapStyle(state);
+              },
+              markers: Set<Marker>.of(widget.markers),
+            );
+          },
+        ),
+        // Example of how to use Positioned in a Stack properly
+        Positioned(
+          left: 10,
+          bottom: 10,
+          child: Container(
+            color: Colors.white,
+            padding: const EdgeInsets.all(8.0),
+            child: const Text('Map Information'),
+          ),
+        ),
+      ],
     );
   }
 }

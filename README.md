@@ -51,7 +51,7 @@ Dart SDK
 4. Run the app:
 
 ```bash
-flutter run
+    flutter run
 ```
 
 ## Mock Data:
